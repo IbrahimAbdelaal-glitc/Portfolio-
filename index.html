@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Ibrahim Abdelaal — UI & UX Designer and Computer Science student. Digital art, visual identity, and environmental design." />
+<title>Ibrahim Abdelaal — UI & UX Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #050506;
+    --bg-soft: #0b0b0e;
+    --surface: rgba(255, 255, 255, 0.035);
+    --surface-2: rgba(255, 255, 255, 0.06);
+    --border: rgba(255, 255, 255, 0.09);
+    --border-strong: rgba(255, 255, 255, 0.18);
+    --text: #f4f4f5;
+    --muted: #a1a1aa;
+    --muted-2: #71717a;
+    --accent-1: #8b5cf6;
+    --accent-2: #ec4899;
+    --grad: linear-gradient(120deg, var(--accent-1), var(--accent-2));
+    --maxw: 1120px;
+    --radius: 18px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ambient background glows */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(600px 400px at 12% 8%, rgba(139, 92, 246, 0.14), transparent 60%),
+      radial-gradient(700px 500px at 90% 30%, rgba(236, 72, 153, 0.10), transparent 60%),
+      radial-gradient(600px 600px at 50% 110%, rgba(139, 92, 246, 0.08), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- NAV ---------- */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    backdrop-filter: blur(14px);
+    background: rgba(5, 5, 6, 0.6);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s ease, background .3s ease;
+  }
+  header.scrolled { border-bottom: 1px solid var(--border); background: rgba(5, 5, 6, 0.82); }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px;
+  }
+  .brand {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700; font-size: 1.05rem; letter-spacing: .5px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .brand .dot {
+    width: 30px; height: 30px; border-radius: 9px;
+    background: var(--grad);
+    display: grid; place-items: center;
+    font-size: .8rem; color: #fff; font-weight: 700;
+  }
+  .nav-links { display: flex; gap: 30px; align-items: center; }
+  .nav-links a {
+    font-size: .9rem; color: var(--muted); font-weight: 500;
+    transition: color .2s ease; position: relative;
+  }
+  .nav-links a::after {
+    content: ""; position: absolute; left: 0; bottom: -6px;
+    width: 0; height: 2px; background: var(--grad); transition: width .25s ease;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-cta {
+    border: 1px solid var(--border-strong);
+    padding: 9px 18px; border-radius: 999px; font-size: .85rem; font-weight: 500;
+    transition: all .25s ease; color: var(--text);
+  }
+  .nav-cta:hover { background: var(--text); color: #000; border-color: var(--text); }
+
+  .burger { display: none; flex-direction: column; gap: 5px; background: none; border: 0; cursor: pointer; padding: 8px; }
+  .burger span { width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: .3s; }
+  .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .burger.open span:nth-child(2) { opacity: 0; }
+  .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ---------- SECTION SHARED ---------- */
+  section { padding: 110px 0; position: relative; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: .8rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 18px;
+  }
+  .eyebrow::before { content: ""; width: 26px; height: 1px; background: var(--grad); }
+  .section-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700; font-size: clamp(2rem, 5vw, 3.1rem);
+    line-height: 1.05; letter-spacing: -1px; margin-bottom: 18px;
+  }
+  .lead { color: var(--muted); font-size: 1.05rem; max-width: 640px; }
+
+  /* ---------- HERO ---------- */
+  .hero { padding-top: 160px; padding-bottom: 120px; }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 60px; align-items: center;
+  }
+  .hero-name {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.8rem, 8vw, 5.6rem);
+    line-height: 0.98; letter-spacing: -2px;
+    margin-bottom: 14px;
+  }
+  .hero-name .gradient { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero-role {
+    font-family: "Space Grotesk", sans-serif;
+    text-transform: uppercase; letter-spacing: 4px; font-size: .95rem;
+    color: var(--muted); margin-bottom: 30px;
+  }
+  .hero-tag {
+    font-family: "Playfair Display", serif; font-style: italic;
+    font-size: clamp(1.3rem, 3vw, 1.7rem); color: #e6e6e8;
+    max-width: 460px; margin-bottom: 38px; line-height: 1.45;
+  }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 15px 28px; border-radius: 999px; font-weight: 600; font-size: .95rem;
+    transition: all .25s ease; cursor: pointer; border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--text); color: #000; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(255,255,255,.12); }
+  .btn-ghost { border-color: var(--border-strong); color: var(--text); }
+  .btn-ghost:hover { background: var(--surface-2); border-color: var(--text); }
+  .btn svg { width: 17px; height: 17px; }
+
+  .hero-photo-wrap { position: relative; display: grid; place-items: center; }
+  .hero-photo {
+    width: 100%; max-width: 360px; aspect-ratio: 4/5; object-fit: cover;
+    border-radius: 26px; border: 1px solid var(--border);
+    position: relative; z-index: 2;
+    box-shadow: 0 30px 80px rgba(0,0,0,.7);
+  }
+  .hero-photo-wrap::before {
+    content: ""; position: absolute; inset: -2px; max-width: 364px; aspect-ratio: 4/5;
+    border-radius: 28px; background: var(--grad); filter: blur(34px); opacity: .35; z-index: 1;
+    justify-self: center; align-self: center;
+  }
+  .hero-badge {
+    position: absolute; z-index: 3; bottom: 18px; left: 50%; transform: translateX(-50%);
+    background: rgba(10,10,12,.85); backdrop-filter: blur(10px);
+    border: 1px solid var(--border); border-radius: 14px;
+    padding: 10px 16px; display: flex; align-items: center; gap: 10px; font-size: .82rem;
+    white-space: nowrap;
+  }
+  .hero-badge .pulse { width: 9px; height: 9px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 0 rgba(52,211,153,.6); animation: pulse 2s infinite; }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 8px rgba(52,211,153,0); } 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0);} }
+
+  .stats { display: flex; gap: 40px; margin-top: 60px; flex-wrap: wrap; }
+  .stat .num { font-family: "Space Grotesk", sans-serif; font-size: 2rem; font-weight: 700; }
+  .stat .lbl { color: var(--muted); font-size: .85rem; }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 60px; align-items: start; }
+  .about-text p { color: var(--muted); font-size: 1.12rem; margin-bottom: 18px; }
+  .about-text p strong { color: var(--text); font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .chip {
+    border: 1px solid var(--border); background: var(--surface);
+    padding: 8px 16px; border-radius: 999px; font-size: .85rem; color: var(--muted);
+  }
+
+  /* ---------- WORK ---------- */
+  .work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+  .project {
+    border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+    background: var(--surface); transition: transform .35s ease, border-color .35s ease;
+    position: relative;
+  }
+  .project:hover { transform: translateY(-6px); border-color: var(--border-strong); }
+  .project-visual {
+    height: 240px; display: grid; place-items: center; position: relative; overflow: hidden;
+  }
+  .project-visual.parking { background: linear-gradient(150deg, #1e3a8a, #2563eb 55%, #38bdf8); }
+  .project-visual.autism { background: linear-gradient(150deg, #831843, #db2777 55%, #f472b6); }
+  .project-visual.traffic { background: linear-gradient(150deg, #0b3a82, #2563eb 50%, #22d3ee); }
+  .project-visual.coffee { background: linear-gradient(150deg, #2b1a10, #6b4226 50%, #c08a5e); }
+  .phone {
+    width: 130px; height: 200px; border-radius: 22px; background: rgba(0,0,0,.55);
+    border: 6px solid rgba(0,0,0,.7); box-shadow: 0 20px 50px rgba(0,0,0,.5);
+    position: relative; display: flex; flex-direction: column; padding: 14px 12px; gap: 8px;
+    transition: transform .4s ease;
+  }
+  .project:hover .phone { transform: translateY(-6px) rotate(-2deg); }
+  .phone .notch { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 40px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.3); }
+  .phone .line { height: 9px; border-radius: 4px; background: rgba(255,255,255,.22); }
+  .phone .line.s { width: 60%; }
+  .phone .line.btn { margin-top: auto; height: 22px; background: rgba(255,255,255,.85); border-radius: 8px; }
+  .phone .ar { color: rgba(255,255,255,.92); font-size: .7rem; text-align: right; direction: rtl; line-height: 1.7; }
+
+  /* desktop app window mockup */
+  .window { width: 100%; max-width: 250px; height: 158px; border-radius: 12px; background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.22); box-shadow: 0 20px 50px rgba(0,0,0,.5); overflow: hidden; display: flex; flex-direction: column; transition: transform .4s ease; }
+  .project:hover .window { transform: translateY(-6px) scale(1.02); }
+  .window .bar { height: 26px; background: rgba(0,0,0,.45); display: flex; align-items: center; gap: 6px; padding: 0 10px; flex: none; }
+  .window .bar i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,.45); }
+  .window .screen { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .window .line { height: 9px; border-radius: 4px; background: rgba(255,255,255,.24); }
+  .window .line.s { width: 55%; }
+  .window .row { display: flex; gap: 8px; }
+  .window .box { border-radius: 6px; background: rgba(255,255,255,.2); flex: 1; }
+  .project-body { padding: 24px; }
+  .project-body h3 { font-family: "Space Grotesk", sans-serif; font-size: 1.35rem; margin-bottom: 8px; }
+  .project-body p { color: var(--muted); font-size: .95rem; margin-bottom: 16px; }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag { font-size: .75rem; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; }
+  .project-num { position: absolute; top: 16px; right: 18px; font-family: "Space Grotesk", sans-serif; font-size: .8rem; color: rgba(255,255,255,.6); z-index: 2; }
+
+  /* ---------- EDUCATION ---------- */
+  .edu-grid { display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 60px; align-items: start; }
+  .timeline { position: relative; padding-left: 26px; }
+  .timeline::before { content: ""; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--accent-1), var(--accent-2)); }
+  .tl-item { position: relative; margin-bottom: 34px; }
+  .tl-item:last-child { margin-bottom: 0; }
+  .tl-item::before { content: ""; position: absolute; left: -26px; top: 4px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent-1); }
+  .tl-item .when { font-family: "Space Grotesk", sans-serif; color: var(--accent-2); font-size: .85rem; letter-spacing: 1px; }
+  .tl-item h4 { font-size: 1.15rem; margin: 4px 0; }
+  .tl-item p { color: var(--muted); font-size: .92rem; }
+  .edu-text p { color: var(--muted); font-size: 1.05rem; margin-bottom: 16px; }
+  .edu-text p strong { color: var(--text); font-weight: 600; }
+
+  /* ---------- SERVICES ---------- */
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 20px; }
+  .service {
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 28px;
+    background: var(--surface); transition: transform .3s ease, background .3s ease, border-color .3s ease;
+  }
+  .service:hover { transform: translateY(-6px); background: var(--surface-2); border-color: var(--border-strong); }
+  .service .icon {
+    width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center;
+    background: var(--grad); margin-bottom: 22px;
+  }
+  .service .icon svg { width: 26px; height: 26px; color: #fff; }
+  .service h3 { font-family: "Space Grotesk", sans-serif; font-size: 1.3rem; margin-bottom: 16px; }
+  .service ul { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+  .service li { color: var(--muted); font-size: .95rem; display: flex; gap: 10px; align-items: flex-start; }
+  .service li::before { content: ""; flex: none; width: 6px; height: 6px; margin-top: 8px; border-radius: 50%; background: var(--grad); }
+
+  /* ---------- CONTACT ---------- */
+  .contact { padding-bottom: 80px; }
+  .contact-card {
+    border: 1px solid var(--border); border-radius: 28px;
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    padding: clamp(34px, 5vw, 64px); text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .contact-card::before {
+    content: ""; position: absolute; top: -120px; left: 50%; transform: translateX(-50%);
+    width: 460px; height: 300px; background: var(--grad); filter: blur(120px); opacity: .25;
+  }
+  .contact-card .section-title { margin-bottom: 14px; }
+  .contact-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 44px;
+    position: relative; z-index: 1;
+  }
+  .contact-item {
+    border: 1px solid var(--border); border-radius: 16px; padding: 24px 16px;
+    background: rgba(0,0,0,.25); transition: all .25s ease; display: flex; flex-direction: column; align-items: center; gap: 12px;
+  }
+  .contact-item:hover { transform: translateY(-5px); border-color: var(--border-strong); background: rgba(255,255,255,.05); }
+  .contact-item .ci-icon { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; border: 1px solid var(--border); }
+  .contact-item .ci-icon svg { width: 22px; height: 22px; }
+  .contact-item .ci-label { font-family: "Space Grotesk", sans-serif; font-size: .95rem; font-weight: 600; }
+  .contact-item .ci-value { color: var(--muted); font-size: .78rem; word-break: break-word; }
+
+  /* ---------- FOOTER ---------- */
+  footer { border-top: 1px solid var(--border); padding: 40px 0; }
+  .foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; color: var(--muted-2); font-size: .85rem; }
+  .foot a:hover { color: var(--text); }
+
+  /* ---------- REVEAL ANIMATION ---------- */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 900px) {
+    .nav-links {
+      position: fixed; inset: 70px 0 auto 0; flex-direction: column; gap: 0;
+      background: rgba(8,8,10,.97); backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border); padding: 10px 0;
+      transform: translateY(-120%); transition: transform .35s ease; height: auto;
+    }
+    .nav-links.open { transform: translateY(0); }
+    .nav-links a { padding: 16px 24px; width: 100%; }
+    .nav-links .nav-cta { margin: 10px 24px; text-align: center; }
+    .burger { display: flex; }
+    .hero-grid, .about-grid, .edu-grid { grid-template-columns: 1fr; gap: 44px; }
+    .hero-photo-wrap { order: -1; }
+    .hero { padding-top: 130px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    section { padding: 80px 0; }
+    .work-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .stats { gap: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<header id="header">
+  <div class="wrap nav">
+    <a href="#home" class="brand"><span class="dot">IA</span> Ibrahim Abdelaal</a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#about">About</a>
+      <a href="#work">Work</a>
+      <a href="#education">Education</a>
+      <a href="#services">What I Do</a>
+      <a href="#contact" class="nav-cta">Get in Touch</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main>
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="home">
+    <div class="wrap hero-grid">
+      <div class="hero-text reveal">
+        <p class="hero-role">UI &amp; UX Designer</p>
+        <h1 class="hero-name">IBRAHIM<br><span class="gradient">ABDELAAL</span></h1>
+        <p class="hero-tag">I create expressive illustrations that tell stories and simplify ideas.</p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn btn-primary">
+            Work with Me
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#work" class="btn btn-ghost">View My Work</a>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="num">3×</div><div class="lbl">Best Student Award</div></div>
+          <div class="stat"><div class="num">4</div><div class="lbl">App Projects</div></div>
+          <div class="stat"><div class="num">4</div><div class="lbl">C++ · Python · HTML · CSS</div></div>
+        </div>
+      </div>
+      <div class="hero-photo-wrap reveal">
+        <img class="hero-photo" alt="Ibrahim Abdelaal portrait"
+          src="https://media.licdn.com/dms/image/v2/D4D03AQF7_bAuqO0XAw/profile-displayphoto-crop_800_800/B4DZt5qpWqKAAI-/0/1767272782544?e=1781740800&v=beta&t=v5H43-DkJfo_UvkHv09oLf-IxqTrbR9y1C_1cF7mJCA" />
+        <div class="hero-badge"><span class="pulse"></span> Available for work</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about">
+    <div class="wrap about-grid">
+      <div class="reveal">
+        <p class="eyebrow">About me</p>
+        <h2 class="section-title">A designer who<br>loves to build.</h2>
+      </div>
+      <div class="about-text reveal">
+        <p>I am a <strong>computer science student</strong> with a passion for technology and problem-solving. I enjoy learning about web development, UI/UX design, and how software can make everyday life easier.</p>
+        <p>In my free time, I like reading, exploring new tools, and working on small projects to improve my skills.</p>
+        <div class="chips">
+          <span class="chip">UI / UX Design</span>
+          <span class="chip">Web Development</span>
+          <span class="chip">C++</span>
+          <span class="chip">Python</span>
+          <span class="chip">HTML</span>
+          <span class="chip">CSS</span>
+          <span class="chip">Data Analysis</span>
+          <span class="chip">Digital Illustration</span>
+          <span class="chip">Problem Solving</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WORK ===== -->
+  <section id="work">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">My Work</p>
+        <h2 class="section-title">Selected projects</h2>
+        <p class="lead">A look at the apps and products I've designed and built — across mobile and desktop, focused on clarity, accessibility, and real-world usefulness.</p>
+      </div>
+      <div class="work-grid" style="margin-top:48px;">
+        <article class="project reveal">
+          <span class="project-num">01</span>
+          <div class="project-visual parking">
+            <div class="phone">
+              <span class="notch"></span>
+              <div class="line"></div>
+              <div class="line s"></div>
+              <div class="line"></div>
+              <div class="line s"></div>
+              <div class="line btn"></div>
+            </div>
+          </div>
+          <div class="project-body">
+            <h3>Parking App</h3>
+            <p>A mobile app concept that helps drivers find, book, and pay for parking spots quickly — with a clean sign-in flow and a simple, intuitive interface.</p>
+            <div class="tags"><span class="tag">UI Design</span><span class="tag">UX Flow</span><span class="tag">Mobile</span></div>
+          </div>
+        </article>
+
+        <article class="project reveal">
+          <span class="project-num">02</span>
+          <div class="project-visual autism">
+            <div class="phone">
+              <span class="notch"></span>
+              <div class="ar">عالم التوحد<br>تطبيق توعوي<br>لدعم أصحاب التوحد</div>
+              <div class="line btn"></div>
+            </div>
+          </div>
+          <div class="project-body">
+            <h3>عالم التوحد — Autism World</h3>
+            <p>An Arabic mobile application designed to support and raise awareness about autism, presenting information through a warm, accessible, right-to-left interface.</p>
+            <div class="tags"><span class="tag">Arabic UI</span><span class="tag">Accessibility</span><span class="tag">Awareness</span></div>
+          </div>
+        </article>
+
+        <article class="project reveal">
+          <span class="project-num">03</span>
+          <div class="project-visual traffic">
+            <div class="window">
+              <div class="bar"><i></i><i></i><i></i></div>
+              <div class="screen">
+                <div class="row"><div class="box" style="height:32px;"></div><div class="box" style="height:32px;"></div><div class="box" style="height:32px;"></div></div>
+                <div class="line"></div>
+                <div class="line s"></div>
+                <div class="line"></div>
+              </div>
+            </div>
+          </div>
+          <div class="project-body">
+            <h3>Smart Traffic Management System</h3>
+            <p>A desktop application for monitoring and controlling traffic flow in real time — with a clear dashboard for signals, live status, and smarter routing decisions.</p>
+            <div class="tags"><span class="tag">Desktop App</span><span class="tag">Dashboard</span><span class="tag">Real-Time</span></div>
+          </div>
+        </article>
+
+        <article class="project reveal">
+          <span class="project-num">04</span>
+          <div class="project-visual coffee">
+            <div class="window">
+              <div class="bar"><i></i><i></i><i></i></div>
+              <div class="screen" style="flex-direction:row; gap:12px;">
+                <div class="box" style="width:64px;"></div>
+                <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+                  <div class="line"></div>
+                  <div class="line s"></div>
+                  <div class="line"></div>
+                  <div class="line s"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="project-body">
+            <h3>Coffee Car</h3>
+            <p>A desktop application for a mobile coffee business — managing the menu, taking orders, and tracking sales through a simple, friendly interface.</p>
+            <div class="tags"><span class="tag">Desktop App</span><span class="tag">Ordering</span><span class="tag">UI Design</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== EDUCATION ===== -->
+  <section id="education">
+    <div class="wrap edu-grid">
+      <div class="reveal">
+        <p class="eyebrow">Education</p>
+        <h2 class="section-title">My journey</h2>
+        <div class="timeline" style="margin-top:30px;">
+          <div class="tl-item">
+            <div class="when">PRESENT</div>
+            <h4>Sphinx University</h4>
+            <p>Computer Science — focus on data analysis, UI/UX design, and programming in C++, Python, HTML &amp; CSS.</p>
+          </div>
+          <div class="tl-item">
+            <div class="when">2024</div>
+            <h4>Darheraa School</h4>
+            <p>Graduated — honored as Best Student three times with several Certificates of Appreciation.</p>
+          </div>
+        </div>
+      </div>
+      <div class="edu-text reveal">
+        <p>I graduated from <strong>Darheraa School in 2024</strong>, where I was honored as the Best Student three times and received several Certificates of Appreciation from my teachers for my academic excellence and dedication. Currently, I am studying at <strong>Sphinx University</strong>, pursuing my degree with a strong focus on data analysis, UI/UX design, and programming in C++, Python, HTML, and CSS.</p>
+        <p>Alongside my studies, I am passionate about technology, creativity, and problem-solving. I enjoy working on projects that combine design and programming to create solutions that are both functional and user-friendly. My academic journey is helping me build not only theoretical knowledge but also practical skills that I can apply in real-world projects.</p>
+        <p>Beyond academics, I am continuously developing myself through certificates, workshops, and personal projects, which allow me to explore new tools, enhance my creativity, and strengthen my professional abilities. My goal is to grow as a skilled computer science student and designer, ready to contribute innovative ideas and impactful solutions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SERVICES ===== -->
+  <section id="services">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">What I Do</p>
+        <h2 class="section-title">Services &amp; skills</h2>
+      </div>
+      <div class="services-grid">
+        <div class="service reveal">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+          </div>
+          <h3>Digital Art</h3>
+          <ul>
+            <li>Custom digital illustrations</li>
+            <li>Editorial and article artwork</li>
+            <li>Character and concept art</li>
+            <li>Social media illustrations</li>
+          </ul>
+        </div>
+        <div class="service reveal">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="6.5" cy="11.5" r="2.5"/><circle cx="17" cy="14" r="2.5"/><path d="M2 21c.5-3 3-5 6-5"/></svg>
+          </div>
+          <h3>Visual Identity</h3>
+          <ul>
+            <li>Logo design &amp; brand identity</li>
+            <li>Social media templates</li>
+            <li>Icon sets &amp; infographics</li>
+            <li>Marketing visuals (banners, ads)</li>
+          </ul>
+        </div>
+        <div class="service reveal">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01M9 12v.01M9 15v.01"/></svg>
+          </div>
+          <h3>Environmental Design</h3>
+          <ul>
+            <li>Signage &amp; wayfinding systems</li>
+            <li>Event &amp; exhibition graphics</li>
+            <li>Branded interior visuals</li>
+            <li>Posters &amp; large-scale prints</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <div class="contact-card reveal">
+        <p class="eyebrow" style="justify-content:center;">Get in Touch</p>
+        <h2 class="section-title">Let's work together.</h2>
+        <p class="lead" style="margin:0 auto;">Have a project in mind or just want to say hello? Reach out through any of the channels below.</p>
+        <div class="contact-grid">
+          <a class="contact-item" href="https://github.com/IbrahimAbdelaal-glitc" target="_blank" rel="noopener">
+            <span class="ci-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 016 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.9 1.2 1.9 1.2 3.2 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg></span>
+            <span class="ci-label">GitHub</span>
+            <span class="ci-value">IbrahimAbdelaal-glitc</span>
+          </a>
+          <a class="contact-item" href="https://www.linkedin.com/in/ibrahim-sayed-166160336" target="_blank" rel="noopener">
+            <span class="ci-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.38-1.85 3.62 0 4.29 2.38 4.29 5.48v6.26zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></span>
+            <span class="ci-label">LinkedIn</span>
+            <span class="ci-value">ibrahim-sayed</span>
+          </a>
+          <a class="contact-item" href="https://instagram.com/ibrahimmoham__d" target="_blank" rel="noopener">
+            <span class="ci-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 01-1.38-.9 3.7 3.7 0 01-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zM12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.12 1.38C1.36 2.67.94 3.34.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.12.66.66 1.33 1.08 2.12 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.12-1.38.66-.66 1.08-1.33 1.38-2.12.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.12C21.33 1.36 20.66.94 19.86.63 19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1018.16 12 6.16 6.16 0 0012 5.84zM12 16a4 4 0 110-8 4 4 0 010 8zm6.41-10.85a1.44 1.44 0 100 2.88 1.44 1.44 0 000-2.88z"/></svg></span>
+            <span class="ci-label">Instagram</span>
+            <span class="ci-value">@ibrahimmoham__d</span>
+          </a>
+          <a class="contact-item" href="mailto:ibrahimmemo246@gmail.com">
+            <span class="ci-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></span>
+            <span class="ci-label">Email</span>
+            <span class="ci-value">ibrahimmemo246@gmail.com</span>
+          </a>
+          <a class="contact-item" href="tel:+201121984767">
+            <span class="ci-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+            <span class="ci-label">Phone</span>
+            <span class="ci-value">01121984767</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap foot">
+    <span>© <span id="year"></span> Ibrahim Abdelaal — UI &amp; UX Designer</span>
+    <span>Designed &amp; built with care.</span>
+  </div>
+</footer>
+
+<script>
+  // year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // nav scroll state
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // mobile menu
+  const burger = document.getElementById('burger');
+  const navLinks = document.getElementById('navLinks');
+  burger.addEventListener('click', () => {
+    burger.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    burger.classList.remove('open');
+    navLinks.classList.remove('open');
+  }));
+
+  // scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
